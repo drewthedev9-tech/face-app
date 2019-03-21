@@ -1,4 +1,14 @@
-.App {
 
 
+
+
+.center{
+    display: flex;
+    justify-content: center;
+}
+
+
+.f3{
+    display: flex;
+    justify-content: center;
 }
