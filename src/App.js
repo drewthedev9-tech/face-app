@@ -22,6 +22,13 @@ const particlesOptions = {
 
 
 class App extends Component {
+constructor() {
+  super();
+  this.state ={
+    input: '',
+  }
+}
+
   render() {
     return (
       <div className="App">
