@@ -1,4 +1,5 @@
 .center{
+    
     display: flex;
     justify-content: center;
 }
@@ -21,3 +22,4 @@
     /* -1 shuld be below everything on our website */
     z-index: 0;
   }
+
