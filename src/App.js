@@ -21,12 +21,20 @@ const particlesOptions = {
   }
 
 
+
 class App extends Component {
 constructor() {
+  // needed to use 'this'
+  // has to be part of this class.
   super();
   this.state ={
     input: '',
   }
+}
+
+
+onInputChange = (event) => {
+  console.log(event.target.value);
 }
 
   render() {
@@ -38,7 +46,8 @@ constructor() {
         <Navigation/>
         <Logo/>
         <Rank/>
-        <ImageLinkForm/>
+        {/* Passed as prop the costructor above*/}
+        <ImageLinkForm onInputChange={this.onInputChange}/>
        
         {/* <FaceRecognition/> */}
       </div>
