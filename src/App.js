@@ -35,27 +35,30 @@ constructor() {
   // needed to use 'this'
   // has to be part of this class.
   super();
-  this.state ={
+  this.state={
     input: '',
+    imageUrl: ''
   }
 }
 
 // to pick up what is entered into the input box.
 onInputChange = (event) => {
-  console.log(event.target.value);
+  this.setState({ input: event.target.value});
 }
 
 // get button to respond to console in browser then addded API 
 // with its own functions.
 onButtonSubmit = () => {
-  console.log('click')
+  this.setState({imageUrl: this.state.input})
+
   // API key code not needed to change , sampe pic in there as well.
     app.models.predict(
-      "a403429f2ddf4b49b307e318f00e528b", 
-      "https://samples.clarifai.com/face-det.jpg")
+      Clarifai.FACE_DETECT_MODEL, 
+      // something wrong here.
+      this.state.input)
       .then(
       function(response) {
-        console.log(response);
+        console.log(response.outputs[0].data.regions[0].region_info.bounding_box);
         // do something with response
       },
       function(err) {
@@ -80,7 +83,7 @@ onButtonSubmit = () => {
           onButtonSubmit={this.onButtonSubmit}
         />
        
-        <FaceRecognition/>
+        <FaceRecognition imageUrl={this.state.imageUrl}/>
       </div>
     );
   }
