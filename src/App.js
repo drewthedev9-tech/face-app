@@ -6,6 +6,7 @@ import Rank from './components/rank/rank';
 import Particles from 'react-particles-js';
 import FaceRecognition from './components/face-recog/face';
 import Clarifai from 'clarifai';
+import Signin from './components/signin/signin';
 import './App.css';
 
 // API
@@ -82,12 +83,14 @@ onButtonSubmit = () => {
   render() {
     return (
       <div className="App">
+      
       <Particles className='particles'
                 params={particlesOptions} 
                 />
-        <Navigation/>
-        <Logo/>
-        <Rank/>
+        <Navigation />
+        <Signin />
+        <Logo />
+        <Rank />
         {/* Passed as prop the costructor above*/}
         <ImageLinkForm 
       
