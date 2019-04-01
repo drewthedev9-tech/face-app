@@ -13,7 +13,7 @@
 .particles{
     /* can hgt these particles on theparticles website */
     /* stays fixed even when you scroll */
-    position: absolute;
+    position: fixed;
     top: 0;
     right: 0;
     bottom:0;
