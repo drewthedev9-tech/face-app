@@ -1,11 +1,10 @@
-.center{
+.App{
     
-    display: flex;
-    justify-content: center;
+    text-align: center;
 }
 
 
-.f3{
+.center{
     display: flex;
     justify-content: center;
 }
@@ -20,6 +19,6 @@
     left:0;
     /* tells what layer you want the styling to be on. */
     /* -1 shuld be below everything on our website */
-    z-index: 0;
+    z-index: -1;
   }
 
