@@ -114,6 +114,7 @@ class App extends Component {
   }
 
   render() {
+    // Dont have to use this.state everywhere.
     const { isSignedIn, imageUrl, route, box } = this.state;
     return (
       <div className="App">
