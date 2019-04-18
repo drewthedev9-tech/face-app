@@ -14,7 +14,7 @@ const database = {
             id: 123,
             name: 'john',
             email: 'john@gmail.com',
-            password: 'cookies!',
+            password: 'cookies',
             // used to track scores.
             entries: 0,
             // New Date is part of javascript when date gets excecuted.
