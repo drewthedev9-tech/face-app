@@ -75,6 +75,7 @@ app.post('/register', (req, res)=>{
 
 // matching id endpoint to get user.
 app.get('/profile/:id', (req, res)=>{
+    // recieve user from the databse there fore needs params.
     const { id } =req.params;
     let found = false;
     database.users.forEach(user=>{
@@ -91,21 +92,28 @@ app.get('/profile/:id', (req, res)=>{
    
 })
 
+// increse their entries count
+app.post('/image',(req, res)=>{
+    // recieve user id from the body in this case.
+    const { id } =req.body;
+    let found = false;
+    database.users.forEach(user=>{
+        //  loose equivelant ==
+        // eslint-disable-next-line eqeqeq
+        if (user.id == id ){
+            found = true;
+            // will increase the entries amount every picture used
+            user.entries ++;
+          return res.json(user.entries);
+        }
+    })
+        if(!found){
+            res.status(400).json('not found');
+        }
+})
+
 
 app.listen (3000, ()=> {
     console.log('app is running on port 3000')
 })
 
-/* 
-
-/-- res = this is working
-
-
-
-register --> POST = user
-
-/profile/ :userID --> = user
-
-/
-
-*/
