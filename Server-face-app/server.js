@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 
 const app = express();
 // nodyParser is a middleware  
+// req.body is getting things from the body of HTML and and parsing, also in JSON format.
 app.use(bodyParser.json());
 
 
@@ -37,7 +38,8 @@ const database = {
 
 // get request to see if front end is talking to server.
 app.get('/', (req, res)=>{
-    res.send('this is working ')
+    // respnding with the user database after they are updated.
+    res.send(database.users)
 })
 
 //sign -- POST successful/fail.
@@ -54,7 +56,40 @@ app.post('/signin', (req, res)=>{
 })
 
 // register --> POST = user.
+// registering to a new user so adding to the database.
+app.post('/register', (req, res)=>{
+    // using destructuring can get these thing from re.body(fron the front-end)
+    const {email, name, password} = req.body;
+    // pushing onto the database atray, getting them from req.body HTML.
+   database.users.push({
+       id:125,
+       name: name,
+       email: email,
+       password: password,
+       entries: 0,
+       joined: new Date()
+   })
+    // responbding with grabbing the last user(who should be the NEW user) of the array.
+    res.json(database.users[database.users.length-1])
+})
 
+// matching id endpoint to get user.
+app.get('/profile/:id', (req, res)=>{
+    const { id } =req.params;
+    let found = false;
+    database.users.forEach(user=>{
+        //  loose equivelant ==
+        // eslint-disable-next-line eqeqeq
+        if (user.id == id ){
+            found = true;
+          return res.json(user);
+        }
+    })
+    if(!found){
+        res.status(400).json('not found');
+    }
+   
+})
 
 
 app.listen (3000, ()=> {
