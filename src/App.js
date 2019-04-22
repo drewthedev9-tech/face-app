@@ -37,6 +37,7 @@ class App extends Component {
       box: {},
       route: 'signin',
       isSignedIn: false,
+      // object for the register entry. when  New user registers.
       user: {
         id: '',
         name: '',
@@ -47,6 +48,7 @@ class App extends Component {
     }
   }
 
+  // passed into the register component.
   loadUser = (data) => {
     this.setState({user: {
       id: data.id,
@@ -64,7 +66,7 @@ class App extends Component {
   //   .then(console.log)
   // }
 
-  
+
   calculateFaceLocation = (data) => {
     const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
     const image = document.getElementById('inputimage');
@@ -145,6 +147,7 @@ class App extends Component {
             </div>
           : (
              route === 'signin'
+            //  passing the loadUser as props into the components.
              ? <Signin loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>
              : <Register loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>
             )
