@@ -1,12 +1,15 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt-nodejs');
+const cors = require('cors');
 
 
 const app = express();
 // nodyParser is a middleware  
 // req.body is getting things from the body of HTML and and parsing, also in JSON format.
 app.use(bodyParser.json());
+// cors is middle ware for connecting API to front end security.
+app.use(cors());
 
 
 // temporary database
@@ -16,6 +19,7 @@ const database = {
             id: 123,
             name: 'john',
             email: 'john@gmail.com',
+            password: 'cookies',
            
             // used to track scores.
             entries: 0,
@@ -27,6 +31,7 @@ const database = {
             id: 124,
             name: 'sally',
             email: 'sally@gmail.com',
+            password:'bananas',
           
             // used to track scores.
             entries: 0,
