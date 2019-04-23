@@ -88,6 +88,7 @@ class App extends Component {
     this.setState({input: event.target.value});
   }
 
+  // launches the API when detect button is submitte.
   onButtonSubmit = () => {
     this.setState({imageUrl: this.state.input});
     app.models
@@ -105,6 +106,7 @@ class App extends Component {
           })
             .then(response => response.json())
             .then(count => {
+              // object assign gets the target object.
               this.setState(Object.assign(this.state.user, { entries: count}))
             })
 

@@ -67,7 +67,7 @@ app.post('/signin', (req, res)=>{
     });
     if(req.body.email === database.users[0].email && 
         req.body.password === database.users[0].password){
-            res.json('success');
+            res.json(database.users[0]);
         } else {
             res.status(400).json('error logging in')
         }
@@ -111,7 +111,7 @@ app.get('/profile/:id', (req, res)=>{
 })
 
 // increse their entries count
-app.post('/image',(req, res)=>{
+app.put('/image',(req, res)=>{
     // recieve user id from the body in this case.
     const { id } =req.body;
     let found = false;
