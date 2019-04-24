@@ -118,10 +118,10 @@ app.put('/image',(req, res)=>{
     database.users.forEach(user=>{
         //  loose equivelant ==
         // eslint-disable-next-line eqeqeq
-        if (user.id == id ){
+        if (user.id === id ){
             found = true;
             // will increase the entries amount every picture used
-            user.entries ++;
+            user.entries ++
           return res.json(user.entries);
         }
     })

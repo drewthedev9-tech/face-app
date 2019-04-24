@@ -106,7 +106,6 @@ class App extends Component {
           })
             .then(response => response.json())
             .then(count => {
-              // object assign gets the target object.
               this.setState(Object.assign(this.state.user, { entries: count}))
             })
 
@@ -115,7 +114,6 @@ class App extends Component {
       })
       .catch(err => console.log(err));
   }
-
   onRouteChange = (route) => {
     if (route === 'signout') {
       this.setState({isSignedIn: false})
