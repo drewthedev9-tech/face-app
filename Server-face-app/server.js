@@ -16,7 +16,7 @@ app.use(cors());
 const database = {
     users: [
         {
-            id: 123,
+            id: "123",
             name: 'john',
             email: 'john@gmail.com',
             password: 'cookies',
@@ -28,7 +28,7 @@ const database = {
         },
 
         {
-            id: 124,
+            id:"124",
             name: 'sally',
             email: 'sally@gmail.com',
             password:'bananas',
@@ -41,7 +41,7 @@ const database = {
 
     ], login:[{
         id:'987',
-        has: '',
+        hash: '',
         email : 'john@gmail.com'
     }
     ]
@@ -96,10 +96,10 @@ app.get('/profile/:id', (req, res)=>{
     // recieve user from the databse there fore needs params.
     const { id } =req.params;
     let found = false;
-    database.users.forEach(user=>{
+    database.users.forEach(user => {
         //  loose equivelant ==
         // eslint-disable-next-line eqeqeq
-        if (user.id == id ){
+        if (user.id === id ){
             found = true;
           return res.json(user);
         }
@@ -112,17 +112,14 @@ app.get('/profile/:id', (req, res)=>{
 
 // increse their entries count
 app.put('/image',(req, res)=>{
-    // recieve user id from the body in this case.
     const { id } =req.body;
     let found = false;
     database.users.forEach(user=>{
-        //  loose equivelant ==
-        // eslint-disable-next-line eqeqeq
         if (user.id === id ){
             found = true;
             // will increase the entries amount every picture used
             user.entries ++
-          return res.json(user.entries);
+           return res.json(user.entries);
         }
     })
         if(!found){
