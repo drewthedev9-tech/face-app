@@ -2,7 +2,24 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt-nodejs');
 const cors = require('cors');
+const knex = require ('knex');
 
+// connecting to database:
+const db = knex({
+    client: 'pg',
+    connection: {
+      host : '127.0.0.1',
+      user : 'andrew',
+      password : 'andrew',
+      database : 'smartbrain'
+    }
+  });
+
+
+//   usual format  knex.select('title', 'author', 'year').from('books')
+db.select('*').from ('users').then(data =>{
+    console.log(data);
+});
 
 const app = express();
 // nodyParser is a middleware  
@@ -11,41 +28,6 @@ app.use(bodyParser.json());
 // cors is middle ware for connecting API to front end security.
 app.use(cors());
 
-
-// temporary database
-const database = {
-    users: [
-        {
-            id: "123",
-            name: 'john',
-            email: 'john@gmail.com',
-            password: 'cookies',
-           
-            // used to track scores.
-            entries: 0,
-            // New Date is part of javascript when date gets excecuted.
-            joined: new Date()
-        },
-
-        {
-            id:"124",
-            name: 'sally',
-            email: 'sally@gmail.com',
-            password:'bananas',
-          
-            // used to track scores.
-            entries: 0,
-            // New Date is part of javascript when date gets excecuted.
-            joined: new Date()
-        }
-
-    ], login:[{
-        id:'987',
-        hash: '',
-        email : 'john@gmail.com'
-    }
-    ]
-}
 
 // get request to see if front end is talking to server.
 app.get('/', (req, res)=>{
@@ -57,21 +39,25 @@ app.get('/', (req, res)=>{
 // sign in to handle the sign inswith the database above.
 
 app.post('/signin', (req, res)=>{
-   
-     // Load hash from your password DB.
-    bcrypt.compare("apples", '$2a$10$fL5xoeLtGxkLirnWmn.bbuGIgLnRvTfsE857LdeRcyLOfT1PIZd6.', function(err, res) {
-        console.log('first guess', res)
-    });
-    bcrypt.compare("veggies", '$2a$10$fL5xoeLtGxkLirnWmn.bbuGIgLnRvTfsE857LdeRcyLOfT1PIZd6.', function(err, res) {
-        console.log('second guess', res)
-    });
-    if(req.body.email === database.users[0].email && 
-        req.body.password === database.users[0].password){
-            res.json(database.users[0]);
+    // knes.js for selecting from the database.
+   db.select('email', 'hash').from('login')
+//    checks email.
+   .where('email', '=', req.body.email)
+    .then(data =>{
+   const isValid =  bcrypt.compareSync(req.body.password,data[0].hash);
+   if ( isValid){
+      return db.select('*').from('users')
+        .where('email', '=', req.body.email)
+        .then(user =>{
+            res.json(user[0])
+        })
+        .catch(err => res.status(400).json('unable to get user'))
         } else {
-            res.status(400).json('error logging in')
+            res.status(400).json('wrong credentials')
         }
-    res.json('signing')
+        
+    })
+    .catch(err=> res.status(400).json('wrong credentials'))
 })
 
 // register --> POST = user.
@@ -79,54 +65,77 @@ app.post('/signin', (req, res)=>{
 app.post('/register', (req, res)=>{
     // using destructuring can get these thing from re.body(fron the front-end)
     const {email, name, password} = req.body;
-    // pushing onto the database atray, getting them from req.body HTML.
-   database.users.push({
-       id:125,
-       name: name,
-       email: email,
-       entries: 0,
-       joined: new Date()
-   })
-    // responbding with grabbing the last user(who should be the NEW user) of the array.
-    res.json(database.users[database.users.length-1])
+    const hash = bcrypt.hashSync(password);
+    // knex inserting from the database (users table).
+    // transaction: trx
+    // updates the logon table
+    db.transaction(trx =>{
+        trx.insert({
+            hash:hash,
+            email: email,
+        })
+        .into('login')
+        .returning('email')
+        // then updates the users table.
+        .then(loginemail =>{
+            return trx('users')
+            .returning('*')
+            .insert({
+                // return the array
+                email: loginemail[0],
+                name: name,
+                joined: new Date()
+            })
+            .then(user =>{
+            // responbding with grabbing the first in the database user(who should be the NEW user) of the array.
+            res.json(user[0]);
+        })
+        })
+        // KNEX js
+        // if all the cod above passed, then will commit and run through
+        .then(trx.commit)
+        .catch(trx.rollback)
+    })
+      
+    // error when people are loggin in if name is the same .
+    .catch(err=> res.status(400).json('unable to register'))
 })
 
 // matching id endpoint to get user.
 app.get('/profile/:id', (req, res)=>{
     // recieve user from the databse there fore needs params.
     const { id } =req.params;
-    let found = false;
-    database.users.forEach(user => {
-        //  loose equivelant ==
-        // eslint-disable-next-line eqeqeq
-        if (user.id === id ){
-            found = true;
-          return res.json(user);
+  
+    //knex for grabbing the profile
+   db.select('*').from('users').where({id})
+    .then(user=>{
+        // if useres length array id not the 1st user ina rray then display
+        // nof found
+        if(user.length){
+            res.json(user[0]);
+            // 
+        } else {
+                res.status(400).json('not found')
         }
+        })
+        .catch(err => res.status(400).json('error getting user'))
     })
-    if(!found){
-        res.status(400).json('not found');
-    }
+  
    
-})
+
 
 // increse their entries count
 app.put('/image',(req, res)=>{
     const { id } =req.body;
-    let found = false;
-    database.users.forEach(user=>{
-        if (user.id === id ){
-            found = true;
-            // will increase the entries amount every picture used
-            user.entries ++
-           return res.json(user.entries);
-        }
-    })
-        if(!found){
-            res.status(400).json('not found');
-        }
-})
-
+    // KNEX update and ncrement functions
+   db('users').where ('id', '=', id)
+   .increment('entries', 1)
+   .returning('entries')
+   .then(entries =>{
+        res.json(entries[0]);
+   })
+   .catch(err => res.status(400).json('unable to update entries'))
+   })
 
 
 
