@@ -3,7 +3,8 @@ const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt-nodejs');
 const cors = require('cors');
 const knex = require ('knex');
-const register = require('./controllers/register')
+const register = require('./controllers/register');
+const signin = require('./controllers/signin');
 
 // connecting to database:
 const db = knex({
@@ -39,30 +40,11 @@ app.get('/', (req, res)=>{
 //sign -- POST successful/fail.
 // sign in to handle the sign inswith the database above.
 
-app.post('/signin', (req, res)=>{
-    // knes.js for selecting from the database.
-   db.select('email', 'hash').from('login')
-//    checks email.
-   .where('email', '=', req.body.email)
-    .then(data =>{
-   const isValid =  bcrypt.compareSync(req.body.password,data[0].hash);
-   if ( isValid){
-      return db.select('*').from('users')
-        .where('email', '=', req.body.email)
-        .then(user =>{
-            res.json(user[0])
-        })
-        .catch(err => res.status(400).json('unable to get user'))
-        } else {
-            res.status(400).json('wrong credentials')
-        }
-        
-    })
-    .catch(err=> res.status(400).json('wrong credentials'))
-})
-
+app.post('/signin', (req, res)=> {signin.handleSignin(req, res,db, bcrypt)})
 // register --> POST = user.
 // registering to a new user so adding to the database.
+// register function is in teh controllers file pushing these parameters to to the 
+// function.
 app.post('/register', (req, res)=>{register.handleRegister(req, res,db, bcrypt)})
 
 // matching id endpoint to get user.
