@@ -15,6 +15,23 @@ const app = new Clarifai.App({
   apiKey: '5f569590514d49e99b9ac44c33093a3c'
  });
 
+ const initialState = {
+  
+    input: '',
+    imageUrl: '',
+    box: {},
+    route: 'signin',
+    isSignedIn: false,
+    // object for the register entry. when  New user registers.
+    user: {
+      id: '',
+      name: '',
+      email: '',
+      entries: 0,
+      joined: ''
+    }
+  
+ }
 
  const particlesOptions = {
   particles: {
@@ -31,21 +48,7 @@ const app = new Clarifai.App({
 class App extends Component {
   constructor() {
     super();
-    this.state = {
-      input: '',
-      imageUrl: '',
-      box: {},
-      route: 'signin',
-      isSignedIn: false,
-      // object for the register entry. when  New user registers.
-      user: {
-        id: '',
-        name: '',
-        email: '',
-        entries: 0,
-        joined: ''
-      }
-    }
+    this.state = initialState;
   }
 
   // passed into the register component.
@@ -116,7 +119,7 @@ class App extends Component {
   }
   onRouteChange = (route) => {
     if (route === 'signout') {
-      this.setState({isSignedIn: false})
+      this.setState(initialState)
     } else if (route === 'home') {
       this.setState({isSignedIn: true})
     }
