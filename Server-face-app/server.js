@@ -5,6 +5,9 @@ const cors = require('cors');
 const knex = require ('knex');
 const register = require('./controllers/register');
 const signin = require('./controllers/signin');
+const profile = require('./controllers/profile');
+const image = require('./controllers/image');
+
 
 // connecting to database:
 const db = knex({
@@ -48,43 +51,10 @@ app.post('/signin', (req, res)=> {signin.handleSignin(req, res,db, bcrypt)})
 app.post('/register', (req, res)=>{register.handleRegister(req, res,db, bcrypt)})
 
 // matching id endpoint to get user.
-app.get('/profile/:id', (req, res)=>{
-    // recieve user from the databse there fore needs params.
-    const { id } =req.params;
+app.get('/profile/:id', (req, res)=>{profile.handelProfileGet(req, res,db)})
   
-    //knex for grabbing the profile
-   db.select('*').from('users').where({id})
-    .then(user=>{
-        // if useres length array id not the 1st user ina rray then display
-        // nof found
-        if(user.length){
-            res.json(user[0]);
-            // 
-        } else {
-                res.status(400).json('not found')
-        }
-        })
-        .catch(err => res.status(400).json('error getting user'))
-    })
-  
-   
-
-
-// increse their entries count
-app.put('/image',(req, res)=>{
-    const { id } =req.body;
-    // KNEX update and ncrement functions
-   db('users').where ('id', '=', id)
-   .increment('entries', 1)
-   .returning('entries')
-   .then(entries =>{
-        res.json(entries[0]);
-   })
-   .catch(err => res.status(400).json('unable to update entries'))
-   })
-
-
-
+   // increse their entries count
+app.put('/image',(req,res)=> {image.handleImage(req,res,db)})
 
 
 app.listen (3000, ()=> {
