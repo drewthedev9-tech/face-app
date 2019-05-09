@@ -1,6 +1,10 @@
 const handleRegister = (req, res,db, bcrypt)=>{
     // using destructuring can get these thing from re.body(fron the front-end)
     const {email, name, password} = req.body;
+    // server and the client shuld do its own validation.
+    if(!email  || !name || !password){
+        return res.status(400).json('incorrect frm submission');
+    }
     const hash = bcrypt.hashSync(password);
     // knex inserting from the database (users table).
     // transaction: trx
