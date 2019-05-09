@@ -5,15 +5,11 @@ import ImageLinkForm from './components/image-link-form/imagelinkform';
 import Rank from './components/rank/rank';
 import Particles from 'react-particles-js';
 import FaceRecognition from './components/face-recog/face';
-import Clarifai from 'clarifai';
 import Signin from './components/signin/signin';
 import Register from './components/register/register';
 import './App.css';
 
-// API
-const app = new Clarifai.App({
-  apiKey: '5f569590514d49e99b9ac44c33093a3c'
- });
+
 
  const initialState = {
   
@@ -94,10 +90,14 @@ class App extends Component {
   // launches the API when detect button is submitte.
   onButtonSubmit = () => {
     this.setState({imageUrl: this.state.input});
-    app.models
-      .predict(
-        Clarifai.FACE_DETECT_MODEL,
-        this.state.input)
+    fetch('http://localhost:3000/imageurl', {
+      method: 'post',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        input: this.state.input
+      })
+    })
+    .then(response => response.json())
       .then(response => {
         if (response) {
           fetch('http://localhost:3000/image', {

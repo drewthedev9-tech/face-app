@@ -1,8 +1,12 @@
 const handleSignin =(req, res, db, bcrypt)=>{
+    const {email, password} = req.body;
+    if(!email || !password){
+        return res.status(400).json('incorrect frm submission');
+    }
     // knes.js for selecting from the database.
    db.select('email', 'hash').from('login')
 //    checks email.
-   .where('email', '=', req.body.email)
+   .where('email', '=', email)
     .then(data =>{
    const isValid =  bcrypt.compareSync(req.body.password,data[0].hash);
    if ( isValid){
