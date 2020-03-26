@@ -7,7 +7,7 @@ const ImageLinkForm = ({onInputChange, onButtonSubmit}) =>{
         <div >
             <p className="f3">
             {/* Curly brackets allow you to use javascript in this case strings */}
-                {'Click ! the gear Icon to detect the face in you pictures.'}
+                {'Enter the URlor Image Address of a image cotaiing a face, watch the detection.'}
             </p>
             <div className='center'>
                 <div className='form center pa4 br3 shadow-3'>
